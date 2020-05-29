@@ -1,10 +1,15 @@
 import React from "react";
+import { client } from "../utils/client";
 
 export default function index() {
   const [imgSrc, setImgSrc] = React.useState("");
   const [guess, setGuess] = React.useState("");
 
-  const fetchNewImage = () => setImgSrc("http://localhost:3001/image.jpg");
+  const fetchNewImage = async () => {
+    const path = await client("images").then((data) => data.src);
+    setImgSrc(path);
+  };
+
   const submitGuess = () => {
     setGuess("");
     console.log(guess);
