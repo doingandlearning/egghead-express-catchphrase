@@ -4,7 +4,7 @@ export default function index() {
   const [imgSrc, setImgSrc] = React.useState("");
   const [guess, setGuess] = React.useState("");
 
-  const fetchNewImage = () => setImgSrc("http://www.fillmurray.com/400/400");
+  const fetchNewImage = () => setImgSrc("http://localhost:3001/image.jpg");
   const submitGuess = () => {
     setGuess("");
     console.log(guess);
