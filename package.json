@@ -1,0 +1,12 @@
+{
+  "name": "covid-catchphrase",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:doingandlearning/egghead-express-catchphrase.git",
+  "author": "Kevin Cunningham <kevin@kevincunningham.co.uk>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "(cd api && npm run dev) & (cd app && npm run dev)",
+    "start": "(cd api && npm run start) & (cd app && npm run start)"
+  }
+}
