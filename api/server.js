@@ -22,11 +22,14 @@ app.post("/guess", (req, res) => {
     answer.toLowerCase().replace(/ /g, "") ===
     req.body.guess.toLowerCase().replace(/ /g, "");
 
-  const message = result
-    ? "Well done! Click for a new image."
-    : "Not this time. Check your spelling and try again.";
+  const response = result
+    ? { msg: "Well done! Click for a new image.", success: true }
+    : {
+        msg: "Not this time. Check your spelling and try again.",
+        success: false,
+      };
 
-  res.json({ msg: message });
+  res.json(response);
 });
 
 app.listen(3001, function () {
