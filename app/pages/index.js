@@ -4,15 +4,20 @@ import { client } from "../utils/client";
 export default function index() {
   const [imgSrc, setImgSrc] = React.useState("");
   const [guess, setGuess] = React.useState("");
+  const [result, setResult] = React.useState("");
 
   const fetchNewImage = async () => {
     const path = await client("images").then((data) => data.src);
     setImgSrc(path);
   };
 
-  const submitGuess = () => {
-    setGuess("");
-    console.log(guess);
+  const submitGuess = async () => {
+    const response = await client("guess", {
+      body: { guess: guess, img: imgSrc },
+    }).then((data) => data);
+    console.log(response);
+    setResult(response);
+    // setGuess("");
   };
 
   return (
@@ -33,6 +38,7 @@ export default function index() {
             onChange={(e) => setGuess(e.target.value)}
           />
           <button onClick={submitGuess}>Submit Guess</button>
+          <pre>{JSON.stringify(result)}</pre>
         </div>
       </div>
     </div>
