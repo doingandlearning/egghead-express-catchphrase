@@ -4,6 +4,7 @@ const fs = require("fs");
 
 const BASE_URL = "http://localhost:3001";
 const imageDirectory = "/public";
+const answers = require("./answers");
 
 const app = express();
 
@@ -15,15 +16,27 @@ app.get("/images", (req, res) => res.json({ src: randomImage() }));
 app.post("/guess", (req, res) => {
   const img = req.body.img.split("/").pop();
   const guess = req.body.guess;
-  const correct = testGuess(guess);
-  return res.json({});
+  const result = testGuess(guess, img);
+  const response = result
+    ? { msg: "Well done! Click for a new image.", success: true }
+    : {
+        msg: "Not this time. Check your spelling and try again.",
+        success: false,
+      };
+  return res.json(response);
 });
 
 app.listen(3001, function () {
   console.log("Server started.");
 });
 
-function testGuess(guess) {}
+function testGuess(guess, img) {
+  const answer = answers.filter((item) => item.image === img)[0].answer;
+  return (
+    answer.toLowerCase().replace(/ /g, "") ===
+    guess.toLowerCase().replace(/ /g, "")
+  );
+}
 
 function randomImage() {
   const files = fs.readdirSync(__dirname + imageDirectory);
