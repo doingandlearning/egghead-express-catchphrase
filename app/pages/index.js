@@ -17,14 +17,14 @@ export default function index() {
     }).then((data) => data);
     console.log(response);
     setResult(response);
-    // setGuess("");
+    setGuess("");
   };
 
   return (
     <div
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
     >
-      <h1>Welcome to Covid Catchphrase</h1>
+      <h1>Welcome to Catchphrase</h1>
       <button onClick={fetchNewImage}>Get new image</button>
       <div style={{ margin: 12 }}>
         <img src={imgSrc} height="400" width="400" />
@@ -36,6 +36,9 @@ export default function index() {
             type="text"
             value={guess}
             onChange={(e) => setGuess(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.keyCode === 13) submitGuess();
+            }}
           />
           <button onClick={submitGuess}>Submit Guess</button>
           <pre>{JSON.stringify(result)}</pre>
