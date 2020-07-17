@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
+const { auth } = require("./utils/auth");
 
 const BASE_URL = "http://localhost:3001";
 const imageDirectory = "/public";
@@ -11,18 +12,18 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/", express.static("public"));
-app.get("/images", (req, res) => res.json({ src: randomImage() }));
+app.get("/images", auth, (req, res) => res.json({ src: randomImage() }));
 
-app.post("/guess", (req, res) => {
+app.post("/guess", auth, (req, res) => {
   const img = req.body.img.split("/").pop();
   const guess = req.body.guess;
   const result = testGuess(guess, img);
   const response = result
     ? { msg: "Well done! Click for a new image.", success: true }
     : {
-        msg: "Not this time. Check your spelling and try again.",
-        success: false,
-      };
+      msg: "Not this time. Check your spelling and try again.",
+      success: false,
+    };
   return res.json(response);
 });
 
