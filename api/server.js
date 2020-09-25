@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
+const { auth } = require("./utils/auth");
+
 const BASE_URL = "http://localhost:3001";
 
 const app = express();
@@ -37,9 +39,9 @@ app.post("/guess", (req, res) => {
   res.json(response);
 });
 
-app.get("/images", (req, res) => res.json({ src: randomImage() }));
+app.get("/images", auth, (req, res) => res.json({ src: randomImage() }));
 
-app.post("/guess", (req, res) => {
+app.post("/guess", auth, (req, res) => {
   const img = req.body.img.split("/").pop();
   const guess = req.body.guess;
   const result = testGuess(guess, img);
