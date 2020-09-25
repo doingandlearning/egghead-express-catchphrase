@@ -3,21 +3,26 @@ import React from "react";
 export default function index() {
   const [imgSrc, setImgSrc] = React.useState("");
   const [guess, setGuess] = React.useState("");
+  const [result, setResult] = React.useState("");
 
   const fetchNewImage = () => {
     setImgSrc("http://www.fillmurray.com/400/400");
   };
 
-  const submitGuess = () => {
+  const submitGuess = async () => {
+    const response = await client("guess", {
+      body: { guess: guess, img: imgSrc },
+    }).then((data) => data);
+    console.log(response);
+    setResult(response);
     setGuess("");
-    console.log(guess);
   };
 
   return (
     <div
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
     >
-      <h1>Welcome to Covid Catchphrase</h1>
+      <h1>Welcome to Catchphrase</h1>
       <button onClick={fetchNewImage}>Get new image</button>
       <div style={{ margin: 12 }}>
         <img src={imgSrc} height="400" width="400" />
@@ -29,8 +34,12 @@ export default function index() {
             type="text"
             value={guess}
             onChange={(e) => setGuess(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.keyCode === 13) submitGuess();
+            }}
           />
           <button onClick={submitGuess}>Submit Guess</button>
+          <pre>{JSON.stringify(result)}</pre>
         </div>
       </div>
     </div>
