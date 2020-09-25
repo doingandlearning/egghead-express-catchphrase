@@ -1,9 +1,9 @@
 import React from "react";
-
+import { client } from "../lib/client";
 export default function index() {
   const [imgSrc, setImgSrc] = React.useState("");
   const [guess, setGuess] = React.useState("");
-  const [result, setResult] = React.useState("");
+  const [result, setResult] = React.useState({ msg: "", success: "" });
 
   const fetchNewImage = async () => {
     const path = await client("images").then((data) => data.src);
@@ -16,11 +16,12 @@ export default function index() {
     const response = await client("guess", {
       body: { guess: guess, img: imgSrc },
     }).then((data) => data);
-    console.log(response);
     setResult(response);
     setGuess("");
   };
-
+  React.useEffect(() => {
+    fetchNewImage();
+  }, []);
   return (
     <div
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
@@ -43,7 +44,9 @@ export default function index() {
           />
           <button onClick={submitGuess}>Submit Guess</button>
           <div>
-            {result && <div style={{ textAlign: "center" }}>{result}</div>}
+            {result.success && (
+              <div style={{ textAlign: "center" }}>{result.msg}</div>
+            )}
           </div>
         </div>
       </div>
