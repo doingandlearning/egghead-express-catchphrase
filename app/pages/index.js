@@ -5,8 +5,11 @@ export default function index() {
   const [guess, setGuess] = React.useState("");
   const [result, setResult] = React.useState("");
 
-  const fetchNewImage = () => {
-    setImgSrc("http://www.fillmurray.com/400/400");
+  const fetchNewImage = async () => {
+    const path = await client("images").then((data) => data.src);
+    setImgSrc(path);
+    setGuess("");
+    setResult("");
   };
 
   const submitGuess = async () => {
@@ -39,7 +42,9 @@ export default function index() {
             }}
           />
           <button onClick={submitGuess}>Submit Guess</button>
-          <pre>{JSON.stringify(result)}</pre>
+          <div>
+            {result && <div style={{ textAlign: "center" }}>{result}</div>}
+          </div>
         </div>
       </div>
     </div>

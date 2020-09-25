@@ -12,8 +12,29 @@ const imageDirectory = "/public";
 const answers = require("./answers");
 
 app.get("/", (req, res) => res.send("this is working"));
-app.listen(3001, function () {
-  console.log("Server started.");
+const imageDirectory = "/public";
+const BASE_URL = "http://localhost:3001";
+const answers = require("./answers.json");
+
+app.get("/images", (req, res) => res.json({ src: selectRandomFile() }));
+
+app.post("/guess", (req, res) => {
+  const imageName = req.body.image.substring(
+    req.body.image.lastIndexOf("/") + 1
+  );
+  const answer = answers.filter((item) => item.image === imageName)[0].answer;
+  const result =
+    answer.toLowerCase().replace(/ /g, "") ===
+    req.body.guess.toLowerCase().replace(/ /g, "");
+
+  const response = result
+    ? { msg: "Well done! Click for a new image.", success: true }
+    : {
+        msg: "Not this time. Check your spelling and try again.",
+        success: false,
+      };
+
+  res.json(response);
 });
 
 app.get("/images", (req, res) => res.json({ src: randomImage() }));
