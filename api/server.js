@@ -2,13 +2,14 @@ const express = require("express");
 const cors = require("cors");
 const fs = require("fs");
 const { auth } = require("./utils/auth");
+const fileUpload = require("express-fileupload")
 
 const BASE_URL = "http://localhost:3001";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-
+app.use(fileUpload())
 app.use("/", express.static("public"));
 const imageDirectory = "/public";
 
@@ -16,6 +17,26 @@ app.get("/", (req, res) => res.send("this is working"));
 const answers = require("./answers.json");
 
 app.get("/images", (req, res) => res.json({ src: selectRandomFile() }));
+
+app.post("/upload-image", (req,res) => {
+try {
+  if(!req.files || Object.keys(req.files).length === 0) {
+    throw {msg: "No image uploaded."}
+  }
+
+  let image = req.files.imageFile
+
+  image.mv(`./public/${image.name}`, (err) => {
+    if (err) {
+      throw err
+    }
+    res.send({msg: "File uploaded."})
+  })
+} catch (error) {
+  console.log(error)
+  return res.status(500).send(error)
+}
+})
 
 app.post("/guess", (req, res) => {
   const imageName = req.body.img.substring(req.body.img.lastIndexOf("/") + 1);
